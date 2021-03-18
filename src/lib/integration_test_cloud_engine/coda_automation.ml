@@ -370,10 +370,12 @@ module Network_manager = struct
     let seed_nodes = [cons_node "seed" None] in
     let snark_coordinator_name =
       "snark-coordinator-"
-      ^ String.sub network_config.terraform.snark_worker_public_key
-          ~pos:
-            (String.length network_config.terraform.snark_worker_public_key - 6)
-          ~len:6
+      ^ String.lowercase
+          (String.sub network_config.terraform.snark_worker_public_key
+             ~pos:
+               ( String.length network_config.terraform.snark_worker_public_key
+               - 6 )
+             ~len:6)
     in
     let snark_coordinator_nodes =
       if network_config.terraform.snark_worker_replicas > 0 then
