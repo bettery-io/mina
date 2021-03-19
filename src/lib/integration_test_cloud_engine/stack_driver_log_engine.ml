@@ -1,6 +1,6 @@
 open Async
 open Core
-open Cmd_util
+open Integration_test_lib.Util
 open Integration_test_lib
 module Timeout = Timeout_lib.Core_time
 module Node = Kubernetes_network.Node
@@ -134,8 +134,6 @@ module Subscription = struct
 
   let create ~name ~filter ~logger =
     let open Deferred.Or_error.Let_syntax in
-    let uuid = Uuid_unix.create () in
-    let name = name ^ "_" ^ Uuid.to_string uuid in
     let gcloud_key_file_env = "GCLOUD_API_KEY" in
     let%bind key =
       match Sys.getenv gcloud_key_file_env with
@@ -172,24 +170,22 @@ module Subscription = struct
     {name; topic; sink}
 
   let delete t =
-    let open Deferred.Or_error.Let_syntax in
-    let delete_subscription =
+    let open Deferred.Let_syntax in
+    let%bind delete_subscription_res =
       run_cmd_or_error "." prog
         ["pubsub"; "subscriptions"; "delete"; t.name; "--project"; project_id]
     in
-    let delete_sink =
+    let%bind delete_sink_res =
       run_cmd_or_error "." prog
         ["logging"; "sinks"; "delete"; t.sink; "--project"; project_id]
     in
-    let delete_topic =
+    let%map delete_topic_res =
       run_cmd_or_error "." prog
         ["pubsub"; "topics"; "delete"; t.topic; "--project"; project_id]
     in
-    let%map _ =
-      Deferred.Or_error.combine_errors
-        [delete_subscription; delete_sink; delete_topic]
-    in
-    ()
+    Or_error.combine_errors
+      [delete_subscription_res; delete_sink_res; delete_topic_res]
+    |> Or_error.map ~f:(Fn.const ())
 
   let pull ~logger t =
     let open Deferred.Or_error.Let_syntax in
@@ -282,8 +278,7 @@ let create ~logger ~(network : Kubernetes_network.t) =
     String.concat filters ~sep:"\n"
   in
   let%map subscription =
-    Subscription.create ~logger ~name:"integration_test_events"
-      ~filter:log_filter
+    Subscription.create ~logger ~name:network.namespace ~filter:log_filter
   in
   [%log info] "Event subscription created" ;
   let event_reader, event_writer = Pipe.create () in

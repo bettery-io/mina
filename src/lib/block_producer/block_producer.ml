@@ -728,9 +728,10 @@ let run ~logger ~prover ~verifier ~trust_system ~get_completed_work
                            ~constraint_constants ~constants:consensus_constants
                            (time_to_ms now) consensus_state
                            ~local_state:consensus_local_state ~keypairs
-                           ~coinbase_receiver ~logger )
+                           ~coinbase_receiver:!coinbase_receiver ~logger )
                    in
-                   set_next_producer_timing next_producer_timing ;
+                   set_next_producer_timing next_producer_timing
+                     consensus_state ;
                    match next_producer_timing with
                    | `Check_again time ->
                        Singleton_scheduler.schedule scheduler (time_of_ms time)
