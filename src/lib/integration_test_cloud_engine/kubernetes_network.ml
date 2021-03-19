@@ -11,6 +11,7 @@ module Node = struct
     ; cluster: string
     ; namespace: string
     ; pod_id: string
+    ; container_id: string (* name of the container inside the pod *)
     ; graphql_enabled: bool
     ; network_keypair: Network_keypair.t option }
 
