@@ -573,6 +573,8 @@ let%test_module "Bootstrap_controller tests" =
   ( module struct
     open Pipe_lib
 
+    let () = Parallel.init_master ()
+
     let max_frontier_length =
       Transition_frontier.global_max_length Genesis_constants.compiled
 

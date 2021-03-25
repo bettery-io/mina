@@ -1290,6 +1290,8 @@ include Make
 
 let%test_module _ =
   ( module struct
+    let () = Parallel.init_master ()
+
     module Mock_base_ledger = Mocks.Base_ledger
     module Mock_staged_ledger = Mocks.Staged_ledger
 

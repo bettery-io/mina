@@ -276,7 +276,8 @@ let%test_module "Transition_handler.Catchup_scheduler tests" =
 
     let () =
       Core.Backtrace.elide := false ;
-      Async.Scheduler.set_record_backtraces true
+      Async.Scheduler.set_record_backtraces true ;
+      Parallel.init_master ()
 
     let logger = Logger.null ()
 

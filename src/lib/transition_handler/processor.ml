@@ -352,7 +352,8 @@ let%test_module "Transition_handler.Processor tests" =
     let () =
       Backtrace.elide := false ;
       Printexc.record_backtrace true ;
-      Async.Scheduler.set_record_backtraces true
+      Async.Scheduler.set_record_backtraces true ;
+      Parallel.init_master ()
 
     let logger = Logger.create ()
 

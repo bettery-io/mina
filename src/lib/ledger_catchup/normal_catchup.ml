@@ -666,7 +666,8 @@ let%test_module "Ledger_catchup tests" =
   ( module struct
     let () =
       Core.Backtrace.elide := false ;
-      Async.Scheduler.set_record_backtraces true
+      Async.Scheduler.set_record_backtraces true ;
+      Parallel.init_master ()
 
     let max_frontier_length = 10
 

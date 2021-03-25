@@ -66,6 +66,8 @@ let%test_module "transaction_status" =
     open Async
     open Mina_numbers
 
+    let () = Parallel.init_master ()
+
     let max_length = 10
 
     let frontier_size = 1

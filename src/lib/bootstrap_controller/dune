@@ -14,4 +14,5 @@
    transition_frontier
    mina_networking
    sync_handler
-   fake_network))
+   fake_network
+   parallel))

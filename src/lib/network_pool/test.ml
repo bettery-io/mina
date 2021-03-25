@@ -5,6 +5,8 @@ open Network_peer
 
 let%test_module "network pool test" =
   ( module struct
+    let () = Parallel.init_master ()
+
     let trust_system = Mocks.trust_system
 
     let logger = Logger.null ()

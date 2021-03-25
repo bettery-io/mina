@@ -627,6 +627,8 @@ let%test_module "random set test" =
   ( module struct
     open Mina_base
 
+    let () = Parallel.init_master ()
+
     let trust_system = Mocks.trust_system
 
     let precomputed_values = Lazy.force Precomputed_values.for_unit_tests

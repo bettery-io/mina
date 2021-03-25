@@ -1912,6 +1912,8 @@ include T
 
 let%test_module "test" =
   ( module struct
+    let () = Parallel.init_master ()
+
     module Sl = T
 
     let self_pk =
